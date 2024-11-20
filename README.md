@@ -1,2 +1,26 @@
 # RareEventDetectionHEDM
 Rapid detection of rare events from in situ X-ray diffraction data using machine learning
+
+## Citation
+If you use this code for your research, please cite our paper(s):
+
+Or via bibtex
+
+```
+@article{Zheng:nb5377,
+author = "Zheng, Weijian and Park, Jun-Sang and Kenesei, Peter and Ali, Ahsan and Liu, Zhengchun and Foster, Ian and Schwarz, Nicholas and Kettimuthu, Rajkumar and Miceli, Antonino and Sharma, Hemant",
+title = "{Rapid detection of rare events from {\it in situ} X-ray diffraction data using machine learning}",
+journal = "Journal of Applied Crystallography",
+year = "2024",
+volume = "57",
+number = "4",
+pages = "",
+month = "Aug",
+doi = {10.1107/S160057672400517X},
+url = {https://doi.org/10.1107/S160057672400517X},
+abstract = {High-energy X-ray diffraction methods can non-destructively map the 3D microstructure and associated attributes of metallic polycrystalline engineering materials in their bulk form. These methods are often combined with external stimuli such as thermo-mechanical loading to take snapshots of the evolving microstructure and attributes over time. However, the extreme data volumes and the high costs of traditional data acquisition and reduction approaches pose a barrier to quickly extracting actionable insights and improving the temporal resolution of these snapshots. This article presents a fully automated technique capable of rapidly detecting the onset of plasticity in high-energy X-ray microscopy data. The technique is computationally faster by at least 50 times than the traditional approaches and works for data sets that are up to nine times sparser than a full data set. This new technique leverages self-supervised image representation learning and clustering to transform massive data sets into compact, semantic-rich representations of visually salient characteristics ({\it e.g.} peak shapes). These characteristics can rapidly indicate anomalous events, such as changes in diffraction peak shapes. It is anticipated that this technique will provide just-in-time actionable information to drive smarter experiments that effectively deploy multi-modal X-ray diffraction methods spanning many decades of length scales.},
+keywords = {high-energy diffraction microscopy, machine learning},
+}
+
+
+```
