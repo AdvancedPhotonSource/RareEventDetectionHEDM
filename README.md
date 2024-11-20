@@ -3,6 +3,9 @@ Rapid detection of rare events from in situ X-ray diffraction data using machine
 
 ## Citation
 If you use this code for your research, please cite our paper(s):
+- W. Zheng, J.-S. Park, P. Kenesei, A. Ali, Z. Liu, I. Foster, N. Schwarz, R. Kettimuthu,
+A. Miceli, and H. Sharma, “Rapid detection of rare events from in situ X-ray diffraction data
+using machine learning,” Journal of Applied Crystallography, vol. 57, Aug 2024. (http://dx.doi.org/10.1107/S160057672400517X)
 
 Or via bibtex
 
