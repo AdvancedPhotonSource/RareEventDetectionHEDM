@@ -1,6 +1,10 @@
 # RareEventDetectionHEDM
 Rapid detection of rare events from in situ X-ray diffraction data using machine learning
 
+![Software Arch](doc/REI_schematic.png)
+
+![Software Arch](doc/REI-detailed-schematic.png)
+
 ## Citation
 If you use this code for your research, please cite our paper(s):
 - W. Zheng, J.-S. Park, P. Kenesei, A. Ali, Z. Liu, I. Foster, N. Schwarz, R. Kettimuthu,
