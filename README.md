@@ -1,11 +1,9 @@
 # RareEventDetectionHEDM
 Rapid detection of rare events from in situ X-ray diffraction data using machine learning
 
-
-
 <p float="left">
-  <img src="doc/REI_schematic.png" width="500" />
-  <img src="/doc/REI-detailed-schematic.png" width="500" /> 
+  <img src="doc/REI_schematic.png" width="400" />
+  <img src="/doc/REI-detailed-schematic.png" width="400" /> 
 </p>
 
 ## Citation
