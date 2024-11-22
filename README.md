@@ -19,6 +19,18 @@ conda install pip
 ```
 We recommend using Python 3.10 because PyPi does not currently contain a scikit-image wheel for Python 3.11 for M1 Macs. One alternative is to install scikit-image through conda instead. We have not tried the current version of the code in other operating systems, but we do not expect any issues.
 
+## Usage
+
+This code has been mostly test with GE detector data at 1-ID. 
+
+First, train the BYOL encoder on a baseline dataset (e.g., zero load):
+```shell
+python train_REI_encoder.py --input scan_001_0MPa.ge5 --output scan_001_0MPa.encoder
+```
+Second, calculate REI values for subsequent datasets (i.e., scans at different loads):
+
+
+
 ## Citation
 If you use this code for your research, please cite our paper(s):
 - W. Zheng, J.-S. Park, P. Kenesei, A. Ali, Z. Liu, I. Foster, N. Schwarz, R. Kettimuthu,
