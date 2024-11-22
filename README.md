@@ -16,8 +16,9 @@ conda create -n foo_test python=3.10
 conda activate foo_test
 conda config --prepend channels conda-forge
 conda install pip
+conda install fabio ???
 ```
-We recommend using Python 3.10 because PyPi does not currently contain a scikit-image wheel for Python 3.11 for M1 Macs. One alternative is to install scikit-image through conda instead. We have not tried the current version of the code in other operating systems, but we do not expect any issues.
+We recommend using Python 3.10? One alternative is to install scikit-image through conda instead. We have tested in this RHEL 8, but we do not expect any issues. Need a GPU? etc ...
 
 ## Usage
 
