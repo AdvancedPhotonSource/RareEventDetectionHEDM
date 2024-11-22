@@ -28,7 +28,11 @@ First, train the BYOL encoder on a baseline dataset (e.g., zero load):
 python train_REI_encoder.py --input scan_001_0MPa.ge5 --output scan_001_0MPa.encoder
 ```
 Second, calculate REI values for subsequent datasets (i.e., scans at different loads):
-
+```shell
+python calculate_REI.py --input scan_001_100MPa.ge5
+python calculate_REI.py --input scan_001_110MPa.ge5
+...
+```
 
 
 ## Citation
