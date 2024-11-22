@@ -21,7 +21,7 @@ We recommend using Python 3.10 because PyPi does not currently contain a scikit-
 
 ## Usage
 
-This code has been mostly test with GE detector data at 1-ID. 
+This code has been mostly tested with GE detector data at 1-ID. 
 
 First, train the BYOL encoder on a baseline dataset (e.g., zero load):
 ```shell
