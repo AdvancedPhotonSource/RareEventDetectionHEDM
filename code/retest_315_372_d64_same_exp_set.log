@@ -1,0 +1,71 @@
+park_ss_ff_0MPa_000315.edf.h5
+park_ss_ff_0MPa_000316.edf.h5
+park_ss_ff_0MPa_000317.edf.h5
+park_ss_ff_0MPa_000318.edf.h5
+park_ss_ff_50MPa_000378.edf.h5
+park_ss_ff_50MPa_000379.edf.h5
+park_ss_ff_50MPa_000380.edf.h5
+park_ss_ff_50MPa_000381.edf.h5
+park_ss_ff_100MPa_000393.edf.h5
+park_ss_ff_100MPa_000394.edf.h5
+park_ss_ff_100MPa_000395.edf.h5
+park_ss_ff_100MPa_000396.edf.h5
+park_ss_ff_150MPa_000399.edf.h5
+park_ss_ff_150MPa_000400.edf.h5
+park_ss_ff_150MPa_000401.edf.h5
+park_ss_ff_150MPa_000402.edf.h5
+park_ss_ff_175MPa_000405.edf.h5
+park_ss_ff_175MPa_000406.edf.h5
+park_ss_ff_175MPa_000407.edf.h5
+park_ss_ff_175MPa_000408.edf.h5
+park_ss_ff_200MPa_000411.edf.h5
+park_ss_ff_200MPa_000412.edf.h5
+park_ss_ff_200MPa_000413.edf.h5
+park_ss_ff_200MPa_000414.edf.h5
+park_ss_ff_225MPa_000417.edf.h5
+park_ss_ff_225MPa_000418.edf.h5
+park_ss_ff_225MPa_000419.edf.h5
+park_ss_ff_225MPa_000420.edf.h5
+park_ss_ff_230MPa_000423.edf.h5
+park_ss_ff_230MPa_000424.edf.h5
+park_ss_ff_230MPa_000425.edf.h5
+park_ss_ff_230MPa_000426.edf.h5
+park_ss_ff_235MPa_000429.edf.h5
+park_ss_ff_235MPa_000430.edf.h5
+park_ss_ff_235MPa_000431.edf.h5
+park_ss_ff_235MPa_000432.edf.h5
+park_ss_ff_240MPa_000456.edf.h5
+park_ss_ff_240MPa_000457.edf.h5
+park_ss_ff_240MPa_000458.edf.h5
+park_ss_ff_240MPa_000459.edf.h5
+park_ss_ff_250MPa_000462.edf.h5
+park_ss_ff_250MPa_000463.edf.h5
+park_ss_ff_250MPa_000464.edf.h5
+park_ss_ff_250MPa_000465.edf.h5
+park_ss_ff_250MPa_2_000468.edf.h5
+park_ss_ff_250MPa_2_000469.edf.h5
+park_ss_ff_250MPa_2_000470.edf.h5
+park_ss_ff_250MPa_2_000471.edf.h5
+park_ss_ff_260MPa_000497.edf.h5
+park_ss_ff_260MPa_000498.edf.h5
+park_ss_ff_260MPa_000499.edf.h5
+park_ss_ff_260MPa_000500.edf.h5
+park_ss_ff_270MPa_000509.edf.h5
+park_ss_ff_270MPa_000512.edf.h5
+park_ss_ff_270MPa_000510.edf.h5
+park_ss_ff_270MPa_000511.edf.h5
+park_ss_ff_280MPa_000524.edf.h5
+park_ss_ff_280MPa_000525.edf.h5
+park_ss_ff_280MPa_000526.edf.h5
+park_ss_ff_280MPa_000527.edf.h5
+park_ss_ff_290MPa_000544.edf.h5
+park_ss_ff_290MPa_000545.edf.h5
+park_ss_ff_290MPa_000546.edf.h5
+park_ss_ff_290MPa_000547.edf.h5
+park_ss_ff_000315_372.edf.h5
+There are 65 patch datasets in total
+now need to do kmeans
+kmeans is done ...
+start for anomaly detection from 1st dataset (0th one is used for baseline dataset)
+it takes 39.2242 seconds to test 65 datasets
+the average patches for each dataset is 53315.5625
