@@ -8,17 +8,19 @@ Rapid detection of rare events from in situ X-ray diffraction data using machine
 
 ## Installation
 
-Weijian: please change this!!! this is just an example from https://github.com/saugatkandel/fast_smart_scanning
-
 We recommend creating a new environment (through conda, pipenv, etc) to try out RareEventDetectionHEDM. The conda command might look like:
 ```shell
-conda create -n foo_test python=3.10
-conda activate foo_test
-conda config --prepend channels conda-forge
-conda install pip
-conda install fabio ???
+conda create -n event_detection python=3.9
+
+conda activate event_detection
+
+pip install torch
+pip install numpy
+pip install h5py
+pip install torchvision
+pip install scikit-learn
+pip install pandas
 ```
-We recommend using Python 3.10? One alternative is to install scikit-image through conda instead. We have tested in this RHEL 8, but we do not expect any issues. Need a GPU? etc ...
 
 ## Usage
 
