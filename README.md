@@ -26,14 +26,28 @@ pip install pandas
 
 This code has been mostly tested with GE detector data at 1-ID. 
 
-First, train the BYOL encoder on a baseline dataset (e.g., zero load):
+Step 0: process the raw HEDM images 
 ```shell
-python train_REI_encoder.py --input scan_001_0MPa.ge5 --output scan_001_0MPa.encoder
+# run the image_processing jupyter notebooks
 ```
-Second, calculate REI values for subsequent datasets (i.e., scans at different loads):
+
+Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):
 ```shell
-python calculate_REI.py --input scan_001_100MPa.ge5
-python calculate_REI.py --input scan_001_110MPa.ge5
+conda activate event_detection
+cd BraggEmb/ 
+python main.py -ih5 $baselinePATH$baselineNAME -zdim $i
+cp $model_savedPATH$model_savedNAME $model_dstPATH$model_dstNAME${i}.pth
+```
+
+Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):
+```shell
+cd $eva_wrkPATH
+python detection4all.py\
+      -bh5 $baselinePATH$baselineNAME\
+      -embmdl $model_dstPATH$model_dstNAME${i}.pth\
+      -ids $eva_datasetPATH\
+      -ocsv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv\
+      -uqthr=${thr} -ncluster=${k}
 ...
 ```
 
