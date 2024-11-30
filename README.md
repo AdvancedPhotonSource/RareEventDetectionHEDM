@@ -52,7 +52,9 @@ python detection4all.py\
 ```
 
 Example:
-
+```shell
+...
+```
 
 ## Citation
 If you use this code for your research, please cite our paper(s):
