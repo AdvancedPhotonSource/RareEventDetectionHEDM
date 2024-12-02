@@ -34,14 +34,14 @@ Step 0: process the raw HEDM images
 Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):
 ```shell
 conda activate event_detection
-cd BraggEmb/ 
+cd BraggEmb_code/ 
 python main.py -ih5 $baselinePATH$baselineNAME -zdim $i
 cp $model_savedPATH$model_savedNAME $model_dstPATH$model_dstNAME${i}.pth
 ```
 
 Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):
 ```shell
-cd $eva_wrkPATH
+cd EventDetection_code
 python detection4all.py\
       -bh5 $baselinePATH$baselineNAME\
       -embmdl $model_dstPATH$model_dstNAME${i}.pth\
@@ -52,9 +52,24 @@ python detection4all.py\
 ```
 
 Example:
+We added some example dataset for the step 1 and step 2, for the step 0, please contact the author for the example dataset (around 12-14 GB for each raw file) 
+Step 1 (the default #epochs is set to 100, please change it if needed)
 ```shell
-...
+cd BraggEmb_code/
+python main.py -ih5 ../../example_dataset/park_ss_ff_0MPa_000315.edf.h5
 ```
+
+Step 2 (please change the -emdmdl name based on #epochs in the previous step)
+```shell
+cd EventDetection_code
+python detection4all.py\
+      -bh5 ../../example_dataset/park_ss_ff_0MPa_000315.edf.h5\
+      -embmdl ../BraggEmb_code/script-ep00100.pth\
+      -ids ../../example_dataset/\
+      -ocsv res-04-40.csv\
+      -uqthr=0.4 -ncluster=40
+```
+
 
 ## Citation
 If you use this code for your research, please cite our paper(s):
