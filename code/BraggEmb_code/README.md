@@ -1,8 +1,6 @@
 # BraggEmb
 
-unzip file under dataset/ (file with patches of Bragg peaks)
-
-run with `python3 ./main.py -ifn=dataset/sample.h5`
+run with `python main.py -ih5 /home/wzheng/EventDetection/rareEventHEDM_v1/baseline_datasets/park_ss_ff_0MPa_000315.edf.h5`
 
 model weights will be check-pointed for each epoch.
 
