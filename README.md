@@ -52,7 +52,9 @@ python detection4all.py\
 ```
 
 Example:
-We added some example dataset for the step 1 and step 2, for the step 0, please contact the author for the example dataset (around 12-14 GB for each raw file) 
+
+We added some example datasets for the step 1 and step 2, for step 0, please contact the authors for the example input dataset (around 12-14 GB for each raw file) 
+
 Step 1 (the default #epochs is set to 100, please change it if needed)
 ```shell
 cd BraggEmb_code/
