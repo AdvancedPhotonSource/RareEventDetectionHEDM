@@ -20,6 +20,8 @@ pip install h5py
 pip install torchvision
 pip install scikit-learn
 pip install pandas
+pip install jupyter
+pip install opencv-python
 ```
 
 ## Usage
@@ -54,6 +56,8 @@ python detection4all.py\
 Example:
 
 We added some example datasets for the step 1 and step 2, for step 0, please contact the authors for the example input dataset (around 12-14 GB for each raw file) 
+
+There is a example file processing notebook at code folder that can be tried.
 
 Step 1 (the default #epochs is set to 100, please change it if needed)
 ```shell
