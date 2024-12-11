@@ -13,7 +13,10 @@ parser.add_argument('-expName',type=str, default="model_save", help='Experiment 
 parser.add_argument('-lr',     type=float,default=3e-4, help='learning rate')
 parser.add_argument('-mbsz',   type=int, default=128, help='mini batch size')
 parser.add_argument('-maxep',  type=int, default=100, help='max training epoches')
-parser.add_argument('-ih5',    required=True, help='input h5 file')
+
+parser.add_argument('-irawt',  required=True, help='input train raw scan file')
+parser.add_argument('-irawd',  required=True, help='input dark raw scan file')
+
 parser.add_argument('-verbose',type=int, default=1, help='non-zero to print logs to stdout')
 parser.add_argument('-psz',    type=int, default=15, help='training/model patch size')
 parser.add_argument('-zdim',   type=int, default=64, help='projection(z)/prediction dim')
@@ -39,7 +42,7 @@ def main(args):
     total_time_tick = perf_counter()
 
     os.environ["CUDA_VISIBLE_DEVICES"] = "0" 
-    os.environ["WORLD_SIZE"] = "2"
+    os.environ["WORLD_SIZE"] = "1"
 
     torch_devs = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     logging.info("[Info] loading data into CPU memory, it will take a while ... ...")
@@ -51,7 +54,8 @@ def main(args):
 
     time_datl_tick = perf_counter()
 
-    train_ds = BraggDataset(args.ih5, psz=args.psz, train=True)
+    # modified data loader here to read the raw file 
+    train_ds = BraggDataset(args.irawt, args.irawd, psz=args.psz, train=True) 
 
     print(f'data load phase 1 time is {perf_counter()-time_datl_tick}')
 
