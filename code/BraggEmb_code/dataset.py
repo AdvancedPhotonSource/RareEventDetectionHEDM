@@ -158,18 +158,17 @@ class BraggDataset(Dataset):
     def __init__(self, irawt, irawd, psz=-1, train=True, tv_split=1):
         self.transform = data_transforms(psz)
 
-        # TODO: read the raw scan and dark file and output a h5 file for later processing
-
-        print(f"Reading dark file from {args.dark} ... ")
+        # read the raw scan and dark file and output a h5 file for later processing
+        print(f"Reading dark file from {irawd} ... ")
         dark = ge_raw2array(irawd, skip_frm=0).mean(axis=0).astype(np.float32)
-        print(f"Done with reading dark file from {args.dark}")
+        print(f"Done with reading dark file from {irawd}")
 
 
         outFile = "test.h5"
+        print(f"Reading training file from {irawt} ... ")
         ge_raw2patch(gefname=irawt, ofn=outFile, dark=dark, bkgd=100, psz=15, skip_frm=0, \
                      min_intensity=0, max_r=None)
-
-
+        print(f"Done with reading training file from {irawt}")
 
         with h5py.File(outFile, 'r') as h5:
             train_N = int(tv_split * h5['patch'].shape[0])

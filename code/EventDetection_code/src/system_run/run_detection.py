@@ -2,6 +2,8 @@ import sys
 sys.path.append('../..')
 
 from src.util.utility import * 
+from src.datasets.utility import * 
+
 from src.embed.embed import Embed
 from src.cluster.cluster import Cluster
 
@@ -44,8 +46,15 @@ class DetectionRun():
     
     def start(self):
 
-        # first find all datasets available:
-        list_datasets, list_pressures, list_idx = find_datasets(self._args.ids, self._args.dpre)
+        # the first step is to process the baseline dataset if streaming mode is enabled: 
+        if self._args.streaming_mode:
+
+
+        # first find all testing datasets available:
+        if self._args.streaming_mode:
+            list_datasets, list_pressures, list_idx = find_dataset_single(self._args.itest, self._args.idarktest)
+        else:
+            list_datasets, list_pressures, list_idx = find_dataset_pooling(self._args.itest, self._args.dpre)
     
         # create a new embed class
         embmdl = Embed(self._args.embmdl)
@@ -77,11 +86,11 @@ class DetectionRun():
 
         for i in range(len(list_datasets)):
             test_degrees = 360
-            if self._args.bh5 != self._args.ids+list_datasets[i]:
+            if self._args.bh5 != self._args.itest+list_datasets[i]:
                 test_degrees = degs=self._args.degs
 
             print(f"start for anomaly detection from {i}th dataset (0th one is used for baseline dataset)")
-            result = self.ds_anamoly_quantify(self._args.ids+list_datasets[i], self._args.frms, embmdl, clusmdl, 
+            result = self.ds_anamoly_quantify(self._args.test+list_datasets[i], self._args.frms, embmdl, clusmdl, 
                                               self._args.uqthr, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
             #dataset_tag += [_res[0] for _res in result]s
             dataset_tag.append(list_datasets[i])
