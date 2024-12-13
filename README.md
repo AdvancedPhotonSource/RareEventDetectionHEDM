@@ -86,7 +86,11 @@ python detection4all.py\
       -ocsv res-04-40.csv\
       -uqthr=0.4 -ncluster=40
 # streaming mode
-python detection4all.py -streaming_mode 1 -ibase ../../example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5 -idarkbase ../../example_dataset/raw/dark_before_000320.edf.ge5 -itest ../../example_dataset/raw/park_ss_ff_260MPa_000497.edf.ge5  -idarktest ../../example_dataset/raw/dark_before_000502.edf.ge5 -embmdl ../BraggEmb_code/model_save-itrOut/script-ep00100.pth -ocsv res-04-40.csv -uqthr=0.4 -ncluster=40
+python detection4all.py -streaming_mode 1\
+      -ibase ../../example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5 -idarkbase ../../example_dataset/raw/dark_before_000320.edf.ge5\
+      -itest ../../example_dataset/raw/park_ss_ff_260MPa_000497.edf.ge5  -idarktest ../../example_dataset/raw/dark_before_000502.edf.ge5\
+      -embmdl ../BraggEmb_code/model_save-itrOut/script-ep00100.pth\
+      -ocsv res-04-40.csv -uqthr=0.4 -ncluster=40
 ```
 
 
