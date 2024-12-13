@@ -2,7 +2,7 @@ import sys
 sys.path.append('../..')
 
 from src.util.utility import * 
-from src.datasets.utility import * 
+# from src.datasets.utility import * 
 
 from src.embed.embed import Embed
 from src.cluster.cluster import Cluster
@@ -48,11 +48,12 @@ class DetectionRun():
 
         # the first step is to process the baseline dataset if streaming mode is enabled, we need to subtract  
         if self._args.streaming_mode:
-            baseh5_dataset, _, _ = find_dataset_single(self._args.ibase, self._args.idarkbase)
+            baseh5_dataset, _, _ = find_dataset_single(self._args.ibase, self._args.idarkbase, self._args.dpre)
+            print(baseh5_dataset)
 
         # first find all testing datasets available:
         if self._args.streaming_mode:
-            list_datasets, list_pressures, list_idx = find_dataset_single(self._args.itest, self._args.idarktest)
+            list_datasets, list_pressures, list_idx = find_dataset_single(self._args.itest, self._args.idarktest, self._args.dpre)
         else:
             list_datasets, list_pressures, list_idx = find_dataset_pooling(self._args.itest, self._args.dpre)
     
@@ -61,7 +62,7 @@ class DetectionRun():
 
         # use the specfic dataset as the baseline dataset, if streaming mode is eanabled, use the other way to do it
         if self._args.streaming_mode:
-            emb_bl, _ = embmdl.peak2emb_missingwedge(baseh5_dataset)
+            emb_bl, _ = embmdl.peak2emb_missingwedge(baseh5_dataset[0])
         else:
             emb_bl, _ = embmdl.peak2emb_missingwedge(self._args.bh5)
 
@@ -73,7 +74,7 @@ class DetectionRun():
         print("kmeans is done ...")
 
         dist_and_uq = [] # used to store distribution and UQ for all datasets
-        dataset_tag = [self._args.bh5]
+        dataset_tag = [self._args.ibase]
         uq_bl, dist_bl = clusmdl.kmeans_clustering_and_dist(emb_bl, min_score=self._args.uqthr)
         if self._args.degs_mode:
             dist_and_uq.append(np.append(dist_bl, uq_bl))
@@ -89,12 +90,12 @@ class DetectionRun():
 
         for i in range(len(list_datasets)):
             test_degrees = 360
-            if self._args.bh5 != self._args.itest+list_datasets[i]:
+            if self._args.ibase != self._args.itest+list_datasets[i]:
                 test_degrees = degs=self._args.degs
 
             print(f"start for anomaly detection from {i}th dataset (0th one is used for baseline dataset)")
             # the streaming mode code here
-            if streaming_mode:
+            if self._args.streaming_mode:
                 result = self.ds_anamoly_quantify(list_datasets[i], self._args.frms, embmdl, clusmdl, 
                                               self._args.uqthr, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
             else:
@@ -110,8 +111,10 @@ class DetectionRun():
                 dist_and_uq.append(result)
 
         toc = time.perf_counter()
+        if self._args.streaming_mode:
+            print(f'the REI score for the testing data is {result[1][-1]}')
         print(f"it takes {toc - tic:0.4f} seconds to test {len(list_datasets)} datasets")
-        print(f"the average patches for each dataset is {total_patches/(len(list_datasets)-1)}")
+        print(f"the average patches for each dataset is {total_patches/(len(list_datasets))}")
 
         if self._args.degs_mode:
             cols =  [f'c{c}' for c in range(dist_bl.shape[0])] + ['uq', ]
