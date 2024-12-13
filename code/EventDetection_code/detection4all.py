@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     # Input and output
     parser.add_argument('-embmdl',   type=str, required=True, help='embedding model path')
-    parser.add_argument('-streaming_mode',type=int, default="1", help='streaming mode (1) or not (0), for streaming mode (1), the baseline, testing, and dark file will be raw files')
+    parser.add_argument('-streaming_mode',type=int, default="0", help='streaming mode (1) or not (0), for streaming mode (1), the baseline, testing, and dark file will be raw files')
 
     parser.add_argument('-ibase',    type=str, required=True, help='baseline dataset, it must be a raw file if streaming mode is selected')
     parser.add_argument('-itest',    type=str, required=True, help='testing scan(s), it is a folder of all scans if pooling mode is selected, it is a single file if streaming mode is selected')

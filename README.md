@@ -37,20 +37,30 @@ Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):
 ```shell
 conda activate event_detection
 cd BraggEmb_code/ 
-python main.py -ih5 $baselinePATH$baselineNAME -zdim $i
+python main.py -irawt $baselinePATH -irawd $baselinedarkPATH -zdim $i
 cp $model_savedPATH$model_savedNAME $model_dstPATH$model_dstNAME${i}.pth
 ```
 
 Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):
-```shell
+```shell 
 cd EventDetection_code
+# regular mode
 python detection4all.py\
-      -bh5 $baselinePATH$baselineNAME\
+      -ibase $baselinePATH\
       -embmdl $model_dstPATH$model_dstNAME${i}.pth\
-      -ids $eva_datasetPATH\
+      -itest $testingPATH\
       -ocsv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv\
       -uqthr=${thr} -ncluster=${k}
-...
+# streaming mode
+python detection4all.py\
+      -streaming_mode 1\
+      -ibase $baselinePATH\
+      -idarkbase $baselinedarkPATH\
+      -itest $testPATH\
+      -idarktest $testdarkPATH\
+      -embmdl $model_dstPATH$model_dstNAME${i}.pth\
+      -ocsv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv\
+      -uqthr=${thr} -ncluster=${k}
 ```
 
 Example:
@@ -62,7 +72,7 @@ There is a example file processing notebook at code folder that can be tried.
 Step 1 (the default #epochs is set to 100, please change it if needed)
 ```shell
 cd BraggEmb_code/
-python main.py -ih5 ../../example_dataset/park_ss_ff_0MPa_000315.edf.h5
+python main.py -irawt ../../example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5 -irawd ../../example_dataset/raw/dark_before_000320.edf.ge5
 ```
 
 Step 2 (please change the -emdmdl name based on #epochs in the previous step)

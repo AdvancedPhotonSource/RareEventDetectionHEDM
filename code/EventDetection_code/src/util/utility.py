@@ -34,13 +34,45 @@ def find_dataset_pooling(dataDir, datasetPre):
     return filesString, filesPressure, filesIdx
 
 
-# TODO: finish a function here to 
-def find_datase_single(idata, datasetPre):
+# finish a function here to 
+def find_datase_single(idata, idark):
 
-    print(f"Streaming mode is enabled, now need to process {idata}")
-    
-    listFiles = os.listdir(dataDir)
-    
+    print(f"Streaming mode is enabled, now need to process {idata} and sbstract it by the dark file {idark}")
+
+    listFiles = list(idata)
+
+    # need to add the function to subtract the dark file, patch extraction and output to a h5 file
+    # read the raw scan and dark file and output a h5 file for later processing
+    print(f"Reading dark file from {idark} ... ")
+    dark = ge_raw2array(idark, skip_frm=0).mean(axis=0).astype(np.float32)
+    print(f"Done with reading dark file from {irawd}")
+
+
+    outFile = f"{idata}.h5"
+    print(f"Reading baseline/testing file from {idata} ... ")
+    ge_raw2patch(gefname=idata, ofn=outFile, dark=dark, bkgd=100, psz=15, skip_frm=0, \
+                    min_intensity=0, max_r=None)
+    print(f"Done with reading baseline/training file from {idata}")
+
+    with h5py.File(outFile, 'r') as h5:
+        train_N = int(tv_split * h5['patch'].shape[0])
+        if train:
+            sidx, eidx = 0, train_N
+        else:
+            sidx, eidx = train_N, None
+        patches = h5['patch'][sidx:eidx]
+
+    _min = patches.min(axis=(1, 2))[:,np.newaxis,np.newaxis]
+    _max = patches.max(axis=(1, 2))[:,np.newaxis,np.newaxis]
+    self.patches = ((patches - _min) / (_max - _min)).astype(np.float32)[:,np.newaxis]
+
+    self.fpsz    = self.patches.shape[-1]
+
+    self.psz = self.fpsz if psz <= 0 else psz
+
+    if self.psz > self.fpsz:
+        sys.exit(f"It's impossible to make patch with ({self.psz}, {self.psz}) from ({self.fpsz}, {self.fpsz})")
+
     filesString   = []
     filesPressure = []
     filesIdx      = []
@@ -63,9 +95,7 @@ def find_datase_single(idata, datasetPre):
     #print(filesPressure)
     #print(filesIdx) 
 
-    return filesString, filesPressure, filesIdx
-
-
+    return list(outFile), filesPressure, filesIdx
 
 
 # find a list of patches from a dataset based on the degree range

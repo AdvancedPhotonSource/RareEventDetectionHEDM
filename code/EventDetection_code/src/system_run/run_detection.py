@@ -46,9 +46,9 @@ class DetectionRun():
     
     def start(self):
 
-        # the first step is to process the baseline dataset if streaming mode is enabled: 
+        # the first step is to process the baseline dataset if streaming mode is enabled, we need to subtract  
         if self._args.streaming_mode:
-
+            baseh5_dataset, _, _ = find_dataset_single(self._args.ibase, self._args.idarkbase)
 
         # first find all testing datasets available:
         if self._args.streaming_mode:
@@ -59,8 +59,11 @@ class DetectionRun():
         # create a new embed class
         embmdl = Embed(self._args.embmdl)
 
-        # use the specfic dataset as the baseline dataset
-        emb_bl, _ = embmdl.peak2emb_missingwedge(self._args.bh5)
+        # use the specfic dataset as the baseline dataset, if streaming mode is eanabled, use the other way to do it
+        if self._args.streaming_mode:
+            emb_bl, _ = embmdl.peak2emb_missingwedge(baseh5_dataset)
+        else:
+            emb_bl, _ = embmdl.peak2emb_missingwedge(self._args.bh5)
 
         print("now need to do kmeans")
         # create a clustering model
@@ -90,8 +93,14 @@ class DetectionRun():
                 test_degrees = degs=self._args.degs
 
             print(f"start for anomaly detection from {i}th dataset (0th one is used for baseline dataset)")
-            result = self.ds_anamoly_quantify(self._args.test+list_datasets[i], self._args.frms, embmdl, clusmdl, 
+            # the streaming mode code here
+            if streaming_mode:
+                result = self.ds_anamoly_quantify(list_datasets[i], self._args.frms, embmdl, clusmdl, 
                                               self._args.uqthr, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
+            else:
+                result = self.ds_anamoly_quantify(self._args.test+list_datasets[i], self._args.frms, embmdl, clusmdl, 
+                                              self._args.uqthr, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
+
             #dataset_tag += [_res[0] for _res in result]s
             dataset_tag.append(list_datasets[i])
             if self._args.degs_mode:
