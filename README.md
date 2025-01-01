@@ -24,6 +24,11 @@ pip install jupyter
 pip install opencv-python
 ```
 
+## Testing Data:
+
+We have shared the testing data at the path ```/home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/```. If you have access to the APS machine, you should be able to access it.
+
+
 ## Usage
 
 This code has been mostly tested with GE detector data at 1-ID. 
@@ -37,30 +42,30 @@ Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):
 ```shell
 conda activate event_detection
 cd BraggEmb_code/ 
-python main.py -irawt $baselinePATH -irawd $baselinedarkPATH -zdim $i
+python main.py -training_scan_file $baselinePATH -training_dark_file $baselinedarkPATH -zdim $i
+# copy trained model if needed
 cp $model_savedPATH$model_savedNAME $model_dstPATH$model_dstNAME${i}.pth
 ```
 
 Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):
 ```shell 
 cd EventDetection_code
-# regular mode
+# patch file mode
 python detection4all.py\
-      -ibase $baselinePATH\
-      -embmdl $model_dstPATH$model_dstNAME${i}.pth\
-      -itest $testingPATH\
-      -ocsv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv\
-      -uqthr=${thr} -ncluster=${k}
-# streaming mode
+      -patch_mode 1
+      -baseline_scan $baselinePATH\
+      -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
+      -testing_scan $testingPATH\
+      -output_csv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
+# raw scan file-based mode
 python detection4all.py\
-      -streaming_mode 1\
-      -ibase $baselinePATH\
-      -idarkbase $baselinedarkPATH\
-      -itest $testPATH\
-      -idarktest $testdarkPATH\
-      -embmdl $model_dstPATH$model_dstNAME${i}.pth\
-      -ocsv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv\
-      -uqthr=${thr} -ncluster=${k}
+      -file_mode 1\
+      -baseline_scan $baselinePATH\
+      -baseline_scan_dark $baselinedarkPATH\
+      -testing_scan $testPATH\
+      -testing_scan_dark $testdarkPATH\
+      -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
+      -output_scv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
 ```
 
 Example:
@@ -72,25 +77,26 @@ There is a example file processing notebook at code folder that can be tried.
 Step 1 (the default #epochs is set to 100, please change it if needed)
 ```shell
 cd BraggEmb_code/
-python main.py -irawt ../../example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5 -irawd ../../example_dataset/raw/dark_before_000320.edf.ge5
+python main.py \
+      -training_scan_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5\
+      -training_dark_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5
 ```
 
 Step 2 (please change the -emdmdl name based on #epochs in the previous step)
 ```shell
 cd EventDetection_code
-# regular mode
-python detection4all.py\
-      -bh5 ../../example_dataset/park_ss_ff_0MPa_000315.edf.h5\
-      -embmdl ../BraggEmb_code/script-ep00100.pth\
-      -ids ../../example_dataset/\
-      -ocsv res-04-40.csv\
-      -uqthr=0.4 -ncluster=40
-# streaming mode
-python detection4all.py -streaming_mode 1\
-      -ibase ../../example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5 -idarkbase ../../example_dataset/raw/dark_before_000320.edf.ge5\
-      -itest ../../example_dataset/raw/park_ss_ff_260MPa_000497.edf.ge5  -idarktest ../../example_dataset/raw/dark_before_000502.edf.ge5\
-      -embmdl ../BraggEmb_code/model_save-itrOut/script-ep00100.pth\
-      -ocsv res-04-40.csv -uqthr=0.4 -ncluster=40
+# patch file mode
+python detection4all.py -patch_mode 1\
+      -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/park_ss_ff_0MPa_000315.edf.h5\
+      -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/\
+      -output_csv res-04-40.csv
+# raw scan file mode
+python detection4all.py -file_mode 1\
+      -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5\
+      -baseline_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
+      -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_260MPa_000497.edf.ge5\
+      -testing_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000502.edf.ge5\
+      -output_csv res-04-40.csv
 ```
 
 

@@ -14,8 +14,8 @@ parser.add_argument('-lr',     type=float,default=3e-4, help='learning rate')
 parser.add_argument('-mbsz',   type=int, default=128, help='mini batch size')
 parser.add_argument('-maxep',  type=int, default=100, help='max training epoches')
 
-parser.add_argument('-irawt',  required=True, help='input train raw scan file')
-parser.add_argument('-irawd',  required=True, help='input dark raw scan file')
+parser.add_argument('-training_scan_file',  required=True, help='input train raw file')
+parser.add_argument('-training_dark_file',  required=True, help='input dark raw file')
 
 parser.add_argument('-verbose',type=int, default=1, help='non-zero to print logs to stdout')
 parser.add_argument('-psz',    type=int, default=15, help='training/model patch size')
@@ -55,7 +55,7 @@ def main(args):
     time_datl_tick = perf_counter()
 
     # modified data loader here to read the raw file 
-    train_ds = BraggDataset(args.irawt, args.irawd, psz=args.psz, train=True) 
+    train_ds = BraggDataset(args.training_scan_file, args.training_dark_file, psz=args.psz, train=True) 
 
     print(f'data load phase 1 time is {perf_counter()-time_datl_tick}')
 
