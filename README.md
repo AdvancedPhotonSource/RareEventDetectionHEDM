@@ -22,6 +22,8 @@ pip install scikit-learn
 pip install pandas
 pip install jupyter
 pip install opencv-python
+pip install tqdm
+pip install fabio
 ```
 
 ## Testing Data:

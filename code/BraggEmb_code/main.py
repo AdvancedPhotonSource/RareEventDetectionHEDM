@@ -8,7 +8,7 @@ import numpy as np
 from time import perf_counter
 
 parser = argparse.ArgumentParser(description='Bragg peak finding for HEDM.')
-parser.add_argument('-gpus',   type=str, default="0", help='the GPU to use')
+parser.add_argument('-gpus',   type=str, default="7", help='the GPU to use')
 parser.add_argument('-expName',type=str, default="model_save", help='Experiment name')
 parser.add_argument('-lr',     type=float,default=3e-4, help='learning rate')
 parser.add_argument('-mbsz',   type=int, default=128, help='mini batch size')

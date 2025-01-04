@@ -4,6 +4,8 @@ import h5py, sys, torchvision, torch
 
 # library for patch extraction
 import cv2, os
+import fabio
+import warnings
 
 def frame_peak_patches_cv2(frame, psz, angle, min_intensity=0, max_r=None):
     fh, fw = frame.shape
@@ -77,8 +79,39 @@ def ge_raw2array(gefname, skip_frm=0):
             frames[i] = np.fromfile(fp, dtype=np.uint16, count=det_res*det_res).reshape(det_res, det_res)
     return frames
 
+
+def ge_raw2array_fabio(gefname, skip_frm=0):
+
+    # Load the image file
+    image = fabio.open(gefname)
+
+    # Check if the file supports multiple frames
+    try:
+        nframes = int(image.nframes)  # AttributeError if not supported
+        print("Number of frames:", nframes)
+    except AttributeError:
+        nframes = 1
+        print("Number of frames:", nframes)
+
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=UserWarning)  # Replace with the relevant category
+        frames = [image.get_frame(i).data for i in range(skip_frm, nframes)]
+
+    # Convert the list of frames to a 3D NumPy array
+    frames_array = np.array(frames)
+
+    # # Display shape of the resulting array
+    # print("Shape of frames array:", frames_array.shape)
+
+    # # Optionally, display metadata for the first skipped frame (0th frame)
+    # if nframes > 0:
+    #     print("Metadata of skipped frame 0:", image.get_frame(0).header)
+
+    return frames_array
+
 def ge_raw2patch(gefname, ofn, dark, bkgd, psz, skip_frm=0, min_intensity=0, max_r=None):
-    frames = ge_raw2array(gefname, skip_frm=1)
+    # frames = ge_raw2array(gefname, skip_frm=1)
+    frames = ge_raw2array_fabio(gefname, skip_frm=1)
     frames = frames.astype(np.float32) - dark
     if bkgd > 0:
         frames[frames < bkgd] = 0
@@ -160,7 +193,7 @@ class BraggDataset(Dataset):
 
         # read the raw scan and dark file and output a h5 file for later processing
         print(f"Reading dark file from {irawd} ... ")
-        dark = ge_raw2array(irawd, skip_frm=0).mean(axis=0).astype(np.float32)
+        dark = ge_raw2array_fabio(irawd, skip_frm=0).mean(axis=0).astype(np.float32)
         print(f"Done with reading dark file from {irawd}")
 
 
