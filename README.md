@@ -52,15 +52,8 @@ cp $model_savedPATH$model_savedNAME $model_dstPATH$model_dstNAME${i}.pth
 Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):
 ```shell 
 cd EventDetection_code
-# patch file mode
-python detection4all.py\
-      -patch_mode 1
-      -baseline_scan $baselinePATH\
-      -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
-      -testing_scan $testingPATH\
-      -bkgd $bkgd\
-      -output_csv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
-# raw scan file-based mode
+
+# raw scan file-based mode (runs on raw ge5 files)
 python detection4all.py\
       -file_mode 1\
       -baseline_scan $baselinePATH\
@@ -70,6 +63,16 @@ python detection4all.py\
       -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
       -bkgd $bkgd\
       -output_scv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
+
+# patch file mode (only expert mode... runs on HDF files which only have patches)
+python detection4all.py\
+      -patch_mode 1
+      -baseline_scan $baselinePATH\
+      -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
+      -testing_scan $testingPATH\
+      -bkgd $bkgd\
+      -output_csv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
+
 ```
 
 Example:
@@ -90,18 +93,20 @@ python main.py \
 Step 2 (please change the -emdmdl name based on #epochs in the previous step, dark file is optional)
 ```shell
 cd EventDetection_code
-# patch file mode
-python detection4all.py -patch_mode 1\
-      -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/park_ss_ff_0MPa_000315.edf.h5\
-      -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/\
-      -bkgd 100\
-      -output_csv res-04-40.csv
-# raw scan file mode
+
+# raw scan file-based mode (runs on raw ge5 files)
 python detection4all.py -file_mode 1\
       -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5\
       -baseline_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
       -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_260MPa_000497.edf.ge5\
       -testing_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000502.edf.ge5\
+      -bkgd 100\
+      -output_csv res-04-40.csv
+
+# patch file mode (only expert mode... runs on HDF files which only have patches)
+python detection4all.py -patch_mode 1\
+      -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/park_ss_ff_0MPa_000315.edf.h5\
+      -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/\
       -bkgd 100\
       -output_csv res-04-40.csv
 ```
