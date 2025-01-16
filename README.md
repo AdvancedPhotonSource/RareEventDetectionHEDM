@@ -44,7 +44,7 @@ Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):
 ```shell
 conda activate event_detection
 cd BraggEmb_code/ 
-python main.py -training_scan_file $baselinePATH -training_dark_file $baselinedarkPATH -zdim $i
+python main.py -training_scan_file $baselinePATH -training_dark_file $baselinedarkPATH -zdim $i -bkgd $bkgd
 # copy trained model if needed
 cp $model_savedPATH$model_savedNAME $model_dstPATH$model_dstNAME${i}.pth
 ```
@@ -58,6 +58,7 @@ python detection4all.py\
       -baseline_scan $baselinePATH\
       -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
       -testing_scan $testingPATH\
+      -bkgd $bkgd\
       -output_csv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
 # raw scan file-based mode
 python detection4all.py\
@@ -67,6 +68,7 @@ python detection4all.py\
       -testing_scan $testPATH\
       -testing_scan_dark $testdarkPATH\
       -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
+      -bkgd $bkgd\
       -output_scv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
 ```
 
@@ -76,21 +78,23 @@ We added some example datasets for the step 1 and step 2, for step 0, please con
 
 There is a example file processing notebook at code folder that can be tried.
 
-Step 1 (the default #epochs is set to 100, please change it if needed)
+Step 1 (the default #epochs is set to 100, please change it if needed, dark file input is optional)
 ```shell
 cd BraggEmb_code/
 python main.py \
       -training_scan_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5\
-      -training_dark_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5
+      -training_dark_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
+      -bkgd 100
 ```
 
-Step 2 (please change the -emdmdl name based on #epochs in the previous step)
+Step 2 (please change the -emdmdl name based on #epochs in the previous step, dark file is optional)
 ```shell
 cd EventDetection_code
 # patch file mode
 python detection4all.py -patch_mode 1\
       -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/park_ss_ff_0MPa_000315.edf.h5\
       -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/\
+      -bkgd 100\
       -output_csv res-04-40.csv
 # raw scan file mode
 python detection4all.py -file_mode 1\
@@ -98,6 +102,7 @@ python detection4all.py -file_mode 1\
       -baseline_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
       -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_260MPa_000497.edf.ge5\
       -testing_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000502.edf.ge5\
+      -bkgd 100\
       -output_csv res-04-40.csv
 ```
 

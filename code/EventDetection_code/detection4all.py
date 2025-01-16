@@ -19,11 +19,12 @@ from src.system_run.run_detection import DetectionRun as Run
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='run anaomaly detection')
+    parser = argparse.ArgumentParser(description='run anomaly detection')
 
     # Input and output
     parser.add_argument('-file_mode', type=int, default="0", help='file-based mode or not, if enabled, the input needs to be a raw ge5 file')
     parser.add_argument('-patch_mode',type=int, default="0", help='patch mode or not, if enabled, the input needs to be a h5 file which has all patches')
+    parser.add_argument('-bkgd',      type=int, required=True, help='background value to process raw images')
 
     parser.add_argument('-trained_encoder', type=str, default="../BraggEmb_code/model_save-itrOut/script-ep00100.pth", help='trained encoder model from the prevoius step embedding model path')
     

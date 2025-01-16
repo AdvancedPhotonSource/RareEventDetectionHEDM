@@ -10,6 +10,7 @@ import pandas as pd
 
 import fabio
 import warnings
+import logging
 
 def frame_peak_patches_cv2(frame, psz, angle, min_intensity=0, max_r=None):
     fh, fw = frame.shape
@@ -85,6 +86,9 @@ def ge_raw2array(gefname, skip_frm=0):
 
 def ge_raw2array_fabio(gefname, skip_frm=0):
 
+    # add this line to suppress some warnings
+    logging.getLogger("fabio").setLevel(logging.ERROR)
+
     # Load the image file
     image = fabio.open(gefname)
 
@@ -106,8 +110,12 @@ def ge_raw2array_fabio(gefname, skip_frm=0):
     return frames_array
 
 def ge_raw2patch(gefname, ofn, dark, bkgd, psz, skip_frm=0, min_intensity=0, max_r=None):
+
     frames = ge_raw2array_fabio(gefname, skip_frm=1)
-    frames = frames.astype(np.float32) - dark
+
+    if not isinstance(dark, str):
+        frames = frames.astype(np.float32) - dark
+    
     if bkgd > 0:
         frames[frames < bkgd] = 0
     frames = frames.astype(np.uint16)

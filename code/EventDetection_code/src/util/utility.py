@@ -6,7 +6,7 @@ import random
 
 import fabio
 import warnings
-
+import logging
 
 # library for patch extraction
 import cv2, os, h5py
@@ -85,6 +85,9 @@ def ge_raw2array(gefname, skip_frm=0):
 
 def ge_raw2array_fabio(gefname, skip_frm=0):
 
+    # add this line to suppress some warnings
+    logging.getLogger("fabio").setLevel(logging.ERROR)
+
     # Load the image file
     image = fabio.open(gefname)
 
@@ -107,7 +110,10 @@ def ge_raw2array_fabio(gefname, skip_frm=0):
 
 def ge_raw2patch(gefname, ofn, dark, bkgd, psz, skip_frm=0, min_intensity=0, max_r=None):
     frames = ge_raw2array_fabio(gefname, skip_frm=1)
-    frames = frames.astype(np.float32) - dark
+    
+    if not isinstance(dark, str):
+        frames = frames.astype(np.float32) - dark
+
     if bkgd > 0:
         frames[frames < bkgd] = 0
     frames = frames.astype(np.uint16)
@@ -136,7 +142,7 @@ def ge_raw2patch(gefname, ofn, dark, bkgd, psz, skip_frm=0, min_intensity=0, max
         h5fd.create_dataset('frame_idx', data=frames_idx, dtype=np.uint16)
 
 # scan from wdir and return a list of datasets
-def find_dataset_pooling(dataDir, datasetPre):
+def find_dataset_pooling(dataDir, bkgd, datasetPre):
     
     listFiles = os.listdir(dataDir)
     
@@ -166,26 +172,32 @@ def find_dataset_pooling(dataDir, datasetPre):
 
 
 # finish a function here to 
-def find_dataset_single(idata, idark, datasetPre):
+def find_dataset_single(idata, idark, bkgd, datasetPre):
 
-    print(f"Streaming mode is enabled, now need to process {idata} and sbstract it by the dark file {idark}")
+    print(f"Raw file based mode is enabled, now need to process {idata} and substract it by the dark file {idark} if provided")
 
     listFiles = list(idata)
 
     # need to add the function to subtract the dark file, patch extraction and output to a h5 file
-    # read the raw scan and dark file and output a h5 file for later processing
-    print(f"Reading dark file from {idark} ... ")
-    dark = ge_raw2array_fabio(idark, skip_frm=0).mean(axis=0).astype(np.float32)
-    print(f"Done with reading dark file from {idark}")
+    # read the raw scan and dark file and output a h5 file for later processing    
+    if idark != "dark":
+        print(f"Reading dark file from {idark} ... ")
+        dark = ge_raw2array_fabio(idark, skip_frm=0).mean(axis=0).astype(np.float32)
+        print(f"Done with reading dark file from {idark}")
+    else:
+        print(f"no dark file provided, skip dark file reading")
 
 
     outFile = f"{idata}.h5"
     print(f'the output h5 file is:{outFile}')
 
-
-    print(f"Reading baseline/testing file from {idata} ... ")
-    ge_raw2patch(gefname=idata, ofn=outFile, dark=dark, bkgd=100, psz=15, skip_frm=0, \
+    print(f"Reading baseline/testing file from {idata} ... ")    
+    if idark != "dark":
+        ge_raw2patch(gefname=idata, ofn=outFile, dark=dark, bkgd=bkgd, psz=15, skip_frm=0, \
                     min_intensity=0, max_r=None)
+    else:
+        ge_raw2patch(gefname=idata, ofn=outFile, dark=idark, bkgd=bkgd, psz=15, skip_frm=0, \
+                         min_intensity=0, max_r=None)
     print(f"Done with reading baseline/training file from {idata}")
 
     filesString   = []

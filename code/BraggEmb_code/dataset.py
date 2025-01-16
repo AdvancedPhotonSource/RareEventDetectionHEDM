@@ -6,6 +6,7 @@ import h5py, sys, torchvision, torch
 import cv2, os
 import fabio
 import warnings
+import logging
 
 def frame_peak_patches_cv2(frame, psz, angle, min_intensity=0, max_r=None):
     fh, fw = frame.shape
@@ -82,6 +83,9 @@ def ge_raw2array(gefname, skip_frm=0):
 
 def ge_raw2array_fabio(gefname, skip_frm=0):
 
+    # add this line to suppress some warnings
+    logging.getLogger("fabio").setLevel(logging.ERROR)
+
     # Load the image file
     image = fabio.open(gefname)
 
@@ -112,7 +116,10 @@ def ge_raw2array_fabio(gefname, skip_frm=0):
 def ge_raw2patch(gefname, ofn, dark, bkgd, psz, skip_frm=0, min_intensity=0, max_r=None):
     # frames = ge_raw2array(gefname, skip_frm=1)
     frames = ge_raw2array_fabio(gefname, skip_frm=1)
-    frames = frames.astype(np.float32) - dark
+
+    if not isinstance(dark, str):
+        frames = frames.astype(np.float32) - dark
+    
     if bkgd > 0:
         frames[frames < bkgd] = 0
     frames = frames.astype(np.uint16)
@@ -188,19 +195,25 @@ class BraggDatasetMIDAS(Dataset):
         return self.patches.shape[0]
 
 class BraggDataset(Dataset):
-    def __init__(self, irawt, irawd, psz=-1, train=True, tv_split=1):
+    def __init__(self, irawt, irawd, bkgd, psz=-1, train=True, tv_split=1):
         self.transform = data_transforms(psz)
 
         # read the raw scan and dark file and output a h5 file for later processing
-        print(f"Reading dark file from {irawd} ... ")
-        dark = ge_raw2array_fabio(irawd, skip_frm=0).mean(axis=0).astype(np.float32)
-        print(f"Done with reading dark file from {irawd}")
-
+        if irawd != "default_dark":
+            print(f"Reading dark file from {irawd} ... ")
+            dark = ge_raw2array_fabio(irawd, skip_frm=0).mean(axis=0).astype(np.float32)
+            print(f"Done with reading dark file from {irawd}")
+        else:
+            print(f"no dark file provided, skip dark file reading")
 
         outFile = "test.h5"
         print(f"Reading training file from {irawt} ... ")
-        ge_raw2patch(gefname=irawt, ofn=outFile, dark=dark, bkgd=100, psz=15, skip_frm=0, \
-                     min_intensity=0, max_r=None)
+        if irawd != "default_dark":
+            ge_raw2patch(gefname=irawt, ofn=outFile, dark=dark, bkgd=bkgd, psz=15, skip_frm=0, \
+                         min_intensity=0, max_r=None)
+        else:
+            ge_raw2patch(gefname=irawt, ofn=outFile, dark=irawd, bkgd=bkgd, psz=15, skip_frm=0, \
+                         min_intensity=0, max_r=None)
         print(f"Done with reading training file from {irawt}")
 
         with h5py.File(outFile, 'r') as h5:
