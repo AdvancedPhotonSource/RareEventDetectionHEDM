@@ -61,7 +61,7 @@ python detection4all.py\
       -testing_scan $testPATH\
       -testing_scan_dark $testdarkPATH\
       -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
-      -bkgd $bkgd\
+      -thold $thold\
       -output_scv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
 
 # patch file mode (only expert mode... runs on HDF files which only have patches)
@@ -70,7 +70,7 @@ python detection4all.py\
       -baseline_scan $baselinePATH\
       -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
       -testing_scan $testingPATH\
-      -bkgd $bkgd\
+      -thold $thold\
       -output_csv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
 
 ```
@@ -87,7 +87,7 @@ cd BraggEmb_code/
 python main.py \
       -training_scan_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5\
       -training_dark_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
-      -bkgd 100
+      -thold 100
 ```
 
 Step 2 (please change the -emdmdl name based on #epochs in the previous step, dark file is optional)
@@ -100,14 +100,14 @@ python detection4all.py -file_mode 1\
       -baseline_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
       -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_260MPa_000497.edf.ge5\
       -testing_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000502.edf.ge5\
-      -bkgd 100\
+      -thold 100\
       -output_csv res-04-40.csv
 
 # patch file mode (only expert mode... runs on HDF files which only have patches)
 python detection4all.py -patch_mode 1\
       -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/park_ss_ff_0MPa_000315.edf.h5\
       -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/\
-      -bkgd 100\
+      -thold 100\
       -output_csv res-04-40.csv
 ```
 

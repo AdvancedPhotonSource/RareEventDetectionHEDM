@@ -113,15 +113,15 @@ def ge_raw2array_fabio(gefname, skip_frm=0):
 
     return frames_array
 
-def ge_raw2patch(gefname, ofn, dark, bkgd, psz, skip_frm=0, min_intensity=0, max_r=None):
+def ge_raw2patch(gefname, ofn, dark, thold, psz, skip_frm=0, min_intensity=0, max_r=None):
     # frames = ge_raw2array(gefname, skip_frm=1)
     frames = ge_raw2array_fabio(gefname, skip_frm=1)
 
     if not isinstance(dark, str):
         frames = frames.astype(np.float32) - dark
     
-    if bkgd > 0:
-        frames[frames < bkgd] = 0
+    if thold > 0:
+        frames[frames < thold] = 0
     frames = frames.astype(np.uint16)
     
     patches, peak_ori = [], []
@@ -195,7 +195,7 @@ class BraggDatasetMIDAS(Dataset):
         return self.patches.shape[0]
 
 class BraggDataset(Dataset):
-    def __init__(self, irawt, irawd, bkgd, psz=-1, train=True, tv_split=1):
+    def __init__(self, irawt, irawd, thold, psz=-1, train=True, tv_split=1):
         self.transform = data_transforms(psz)
 
         # read the raw scan and dark file and output a h5 file for later processing
@@ -209,10 +209,10 @@ class BraggDataset(Dataset):
         outFile = "test.h5"
         print(f"Reading training file from {irawt} ... ")
         if irawd != "default_dark":
-            ge_raw2patch(gefname=irawt, ofn=outFile, dark=dark, bkgd=bkgd, psz=15, skip_frm=0, \
+            ge_raw2patch(gefname=irawt, ofn=outFile, dark=dark, thold=thold, psz=15, skip_frm=0, \
                          min_intensity=0, max_r=None)
         else:
-            ge_raw2patch(gefname=irawt, ofn=outFile, dark=irawd, bkgd=bkgd, psz=15, skip_frm=0, \
+            ge_raw2patch(gefname=irawt, ofn=outFile, dark=irawd, thold=thold, psz=15, skip_frm=0, \
                          min_intensity=0, max_r=None)
         print(f"Done with reading training file from {irawt}")
 

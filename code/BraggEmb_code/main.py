@@ -9,7 +9,7 @@ from time import perf_counter
 
 parser = argparse.ArgumentParser(description='Bragg peak finding for HEDM.')
 
-parser.add_argument('-bkgd',   type=int, required=True, help='background value to process raw images')
+parser.add_argument('-thold',   type=int, required=True, help='background (threshold) value to process raw images')
 parser.add_argument('-training_scan_file',  required=True, help='input train raw file')
 
 parser.add_argument('-gpus',   type=str, default="7", help='the GPU to use')
@@ -56,7 +56,7 @@ def main(args):
     time_datl_tick = perf_counter()
 
     # modified data loader here to read the raw file 
-    train_ds = BraggDataset(args.training_scan_file, args.training_dark_file, bkgd=args.bkgd, psz=args.psz, train=True) 
+    train_ds = BraggDataset(args.training_scan_file, args.training_dark_file, thold=args.thold, psz=args.psz, train=True) 
 
     print(f'data load phase 1 time is {perf_counter()-time_datl_tick}')
 

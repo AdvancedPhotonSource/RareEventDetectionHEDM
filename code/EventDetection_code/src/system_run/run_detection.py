@@ -48,14 +48,14 @@ class DetectionRun():
 
         # the first step is to process the baseline dataset if streaming mode is enabled, we need to subtract background, dark, or both
         if self._args.file_mode:
-            baseh5_dataset, _, _ = find_dataset_single(self._args.baseline_scan, self._args.baseline_scan_dark, self._args.bkgd, self._args.dpre)
+            baseh5_dataset, _, _ = find_dataset_single(self._args.baseline_scan, self._args.baseline_scan_dark, self._args.thold, self._args.dpre)
             print(baseh5_dataset)
 
         # first find all testing datasets available:
         if self._args.file_mode:
-            list_datasets, list_pressures, list_idx = find_dataset_single(self._args.testing_scan, self._args.testing_scan_dark, self._args.bkgd, self._args.dpre)
+            list_datasets, list_pressures, list_idx = find_dataset_single(self._args.testing_scan, self._args.testing_scan_dark, self._args.thold, self._args.dpre)
         else:
-            list_datasets, list_pressures, list_idx = find_dataset_pooling(self._args.testing_scan, self._args.bkgd, self._args.dpre)
+            list_datasets, list_pressures, list_idx = find_dataset_pooling(self._args.testing_scan, self._args.thold, self._args.dpre)
     
         # create a new embed class
         embmdl = Embed(self._args.trained_encoder)

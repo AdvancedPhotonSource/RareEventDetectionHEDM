@@ -108,14 +108,14 @@ def ge_raw2array_fabio(gefname, skip_frm=0):
 
     return frames_array
 
-def ge_raw2patch(gefname, ofn, dark, bkgd, psz, skip_frm=0, min_intensity=0, max_r=None):
+def ge_raw2patch(gefname, ofn, dark, thold, psz, skip_frm=0, min_intensity=0, max_r=None):
     frames = ge_raw2array_fabio(gefname, skip_frm=1)
     
     if not isinstance(dark, str):
         frames = frames.astype(np.float32) - dark
 
-    if bkgd > 0:
-        frames[frames < bkgd] = 0
+    if thold > 0:
+        frames[frames < thold] = 0
     frames = frames.astype(np.uint16)
     
     patches, peak_ori = [], []
@@ -142,7 +142,7 @@ def ge_raw2patch(gefname, ofn, dark, bkgd, psz, skip_frm=0, min_intensity=0, max
         h5fd.create_dataset('frame_idx', data=frames_idx, dtype=np.uint16)
 
 # scan from wdir and return a list of datasets
-def find_dataset_pooling(dataDir, bkgd, datasetPre):
+def find_dataset_pooling(dataDir, thold, datasetPre):
     
     listFiles = os.listdir(dataDir)
     
@@ -172,7 +172,7 @@ def find_dataset_pooling(dataDir, bkgd, datasetPre):
 
 
 # finish a function here to 
-def find_dataset_single(idata, idark, bkgd, datasetPre):
+def find_dataset_single(idata, idark, thold, datasetPre):
 
     print(f"Raw file based mode is enabled, now need to process {idata} and substract it by the dark file {idark} if provided")
 
@@ -193,10 +193,10 @@ def find_dataset_single(idata, idark, bkgd, datasetPre):
 
     print(f"Reading baseline/testing file from {idata} ... ")    
     if idark != "dark":
-        ge_raw2patch(gefname=idata, ofn=outFile, dark=dark, bkgd=bkgd, psz=15, skip_frm=0, \
+        ge_raw2patch(gefname=idata, ofn=outFile, dark=dark, thold=thold, psz=15, skip_frm=0, \
                     min_intensity=0, max_r=None)
     else:
-        ge_raw2patch(gefname=idata, ofn=outFile, dark=idark, bkgd=bkgd, psz=15, skip_frm=0, \
+        ge_raw2patch(gefname=idata, ofn=outFile, dark=idark, thold=thold, psz=15, skip_frm=0, \
                          min_intensity=0, max_r=None)
     print(f"Done with reading baseline/training file from {idata}")
 
