@@ -43,7 +43,7 @@ Step 0: process the raw HEDM images
 Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):
 ```shell
 conda activate event_detection
-cd BraggEmb_code/ 
+cd code/BraggEmb_code/
 python main.py -training_scan_file $baselinePATH -training_dark_file $baselinedarkPATH -zdim $i -bkgd $bkgd
 # copy trained model if needed
 cp $model_savedPATH$model_savedNAME $model_dstPATH$model_dstNAME${i}.pth
@@ -84,7 +84,7 @@ There is a example file processing notebook at code folder that can be tried.
 Step 1 (the default #epochs is set to 100, please change it if needed, dark file input is optional)
 ```shell
 conda activate event_detection
-cd BraggEmb_code/
+cd code/BraggEmb_code/
 python main.py \
       -training_scan_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5\
       -training_dark_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
