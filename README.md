@@ -83,6 +83,7 @@ There is a example file processing notebook at code folder that can be tried.
 
 Step 1 (the default #epochs is set to 100, please change it if needed, dark file input is optional)
 ```shell
+conda activate event_detection
 cd BraggEmb_code/
 python main.py \
       -training_scan_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5\
