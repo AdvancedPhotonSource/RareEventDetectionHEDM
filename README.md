@@ -28,7 +28,7 @@ pip install fabio
 
 ## Testing Data:
 
-We have shared the testing data at the path ```/home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/```. If you have access to the APS machine, you should be able to access it.
+We have shared the raw (ge5) testing data at the path ```/home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw```. If you have access to the APS machine, you should be able to access it.
 
 
 ## Usage
