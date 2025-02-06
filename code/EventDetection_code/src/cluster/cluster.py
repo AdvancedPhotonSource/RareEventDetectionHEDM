@@ -8,6 +8,7 @@ The base Clustering class.
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
 import numpy as np
+import joblib
 
 class Cluster:
     def __init__(self, numClusters=30):
@@ -18,6 +19,7 @@ class Cluster:
 
     def train(self, emb):
         self._kmm = KMeans(n_clusters=self._numClusters, random_state=2022).fit(emb)
+        joblib.dump(self._kmm, "kmeans_model.pkl")
         return self._kmm
 
 
@@ -51,6 +53,7 @@ class Cluster:
         return Weight
 
     def kmeans_clustering_and_dist(self, emb, min_score=0.1):
+        self._kmm = joblib.load("kmeans_model.pkl")
         pred   = self._kmm.predict(emb)
         counts = np.array([(pred==_c).sum() for _c in range(self._kmm.n_clusters)])
         dist   = counts / counts.sum()
