@@ -188,7 +188,7 @@ def find_dataset_single(idata, idark, thold, datasetPre):
         print(f"no dark file provided, skip dark file reading")
 
 
-    outFile = f"{idata}.h5"
+    outFile = f"{datasetPre}.h5"
     print(f'the output h5 file is:{outFile}')
 
     print(f"Reading baseline/testing file from {idata} ... ")    
