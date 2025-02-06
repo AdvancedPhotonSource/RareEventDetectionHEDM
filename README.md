@@ -104,6 +104,18 @@ python detection4all.py -file_mode 1\
       -thold 100\
       -output_csv res-04-40.csv
 
+# Or run them separately:
+python baseline_pre.py  -file_mode 1\
+      -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5\
+      -baseline_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
+      -thold 100\
+
+python testing_scan.py  -file_mode 1\
+      -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_260MPa_000497.edf.ge5\
+      -testing_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000502.edf.ge5\
+      -thold 100\
+      -output_csv res-04-40.csv
+
 # patch file mode (only expert mode... runs on HDF files which only have patches)
 python detection4all.py -patch_mode 1\
       -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/park_ss_ff_0MPa_000315.edf.h5\
