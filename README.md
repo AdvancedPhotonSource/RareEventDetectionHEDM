@@ -74,7 +74,6 @@ We added some example datasets for the step 1 and step 2, for step 0, please con
 There is a example file processing notebook at code folder that can be tried.
 
 **Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):**
-Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load): (the default #epochs is set to 100, please change it if needed, dark file input is optional)
 ```shell
 conda activate event_detection
 cd code/BraggEmb_code/
@@ -84,7 +83,6 @@ python main.py \
       -thold 100
 ```
 **Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):**
-Step 2 (please change the -emdmdl name based on #epochs in the previous step, dark file is optional)
 ```shell
 cd EventDetection_code
 
