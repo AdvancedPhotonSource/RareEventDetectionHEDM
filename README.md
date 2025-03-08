@@ -5,7 +5,8 @@ Here is this all works. In a typical FF-HEDM experiment, the sample is rotated a
 
 Let's talk about the details of the workflow now: 
 * **Training:** The user needs to decide which scan is to consider as the "baseline" scan. (Note: in the paper, we talk about the baseline and reference datasets. Typically, these are the same thing (i.e., the zero load scan), but in principle can be different.)  This is typically when the sample is under no load. So, a user needs to take the baseline dataset and use it to train the model. The first steps to take full detector images (i.e., dark subtracted and lower thresholded) and find all the Bragg peaks and create a so-called patches (currently patch size is 15x15 pixels hardcoded). We use connected components method for this. Once we have the pacthes, we need to do the training which has 2 steps: training the encoder and find the K-centers. This encoder is basically a latent space representation of the Bragg peaks. We use the BYOL method. This method learns the latent features of the Bragg peaks in the baseline dataset and trains and encoder. This  encoder generates a 1-D representation vector of the Bragg peaks (i.e., sometimes called the "embedding"). Next, we user a K-means clustering algorithm to group these representation vectors into K centers. This clustering process allows us to identify common patterns and clusters within the baselin dataset. The user needs to pick the number of clusters; we have that 30 is good number to use.  
-* **al:**
+* **Calculate REI scores:** Now that we have the trained encoder and the K-centers, we can calculate REI scores on the subseqeuent scans (i.e., load points)
+* 
 <p float="left">
   <img src="doc/REI_schematic.png" width="250" />
   <img src="/doc/REI-detailed-schematic.png" width="250" /> 
@@ -68,16 +69,6 @@ python detection4all.py\
       -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
       -thold $thold\
       -output_scv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
-
-# patch file mode (only expert mode... runs on HDF files which only have patches)
-python detection4all.py\
-      -patch_mode 1
-      -baseline_scan $baselinePATH\
-      -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
-      -testing_scan $testingPATH\
-      -thold $thold\
-      -output_csv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
-
 ```
 
 Example:
@@ -86,7 +77,7 @@ We added some example datasets for the step 1 and step 2, for step 0, please con
 
 There is a example file processing notebook at code folder that can be tried.
 
-Step 1 (the default #epochs is set to 100, please change it if needed, dark file input is optional)
+Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load): (the default #epochs is set to 100, please change it if needed, dark file input is optional)
 ```shell
 conda activate event_detection
 cd code/BraggEmb_code/
@@ -95,7 +86,7 @@ python main.py \
       -training_dark_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
       -thold 100
 ```
-
+Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):
 Step 2 (please change the -emdmdl name based on #epochs in the previous step, dark file is optional)
 ```shell
 cd EventDetection_code
@@ -114,17 +105,9 @@ python baseline_pre.py  -file_mode 1\
       -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5\
       -baseline_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
       -thold 100\
-
 python testing_scan.py  -file_mode 1\
       -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_260MPa_000497.edf.ge5\
       -testing_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000502.edf.ge5\
-      -thold 100\
-      -output_csv res-04-40.csv
-
-# patch file mode (only expert mode... runs on HDF files which only have patches)
-python detection4all.py -patch_mode 1\
-      -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/park_ss_ff_0MPa_000315.edf.h5\
-      -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/patch/\
       -thold 100\
       -output_csv res-04-40.csv
 ```
