@@ -6,7 +6,7 @@ Here is this all works. In a typical FF-HEDM experiment, the sample is rotated a
 Let's talk about the details of the workflow now: 
 * **Training:** The user needs to decide which scan is to consider as the "baseline" scan. (Note: in the paper, we talk about the baseline and reference datasets. Typically, these are the same thing (i.e., the zero load scan), but in principle can be different.)  This is typically when the sample is under no load. So, a user needs to take the baseline dataset and use it to train the model. The first steps to take full detector images (i.e., dark subtracted and lower thresholded) and find all the Bragg peaks and create a so-called patches (currently patch size is 15x15 pixels hardcoded). We use connected components method for this. Once we have the pacthes, we need to do the training which has 2 steps: training the encoder and find the K-centers. This encoder is basically a latent space representation of the Bragg peaks. We use the BYOL method. This method learns the latent features of the Bragg peaks in the baseline dataset and trains and encoder. This  encoder generates a 1-D representation vector of the Bragg peaks (i.e., sometimes called the "embedding"). Next, we user a K-means clustering algorithm to group these representation vectors into K centers. This clustering process allows us to identify common patterns and clusters within the baselin dataset. The user needs to pick the number of clusters; we have that 30 is good number to use.  
 * **Calculate REI scores:** Now that we have the trained encoder and the K-centers, we can calculate REI scores on the subseqeuent scans (i.e., load points)
-* 
+  
 <p float="left">
   <img src="doc/REI_schematic.png" width="250" />
   <img src="/doc/REI-detailed-schematic.png" width="250" /> 
@@ -41,12 +41,8 @@ We have shared the raw (ge5) testing data at the path ```/home/beams/WZHENG/Rare
 
 This code has been mostly tested with GE detector data at 1-ID. 
 
-Step 0: process the raw HEDM images 
-```shell
-# run the image_processing jupyter notebooks
-```
 
-Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):
+**Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):**
 ```shell
 conda activate event_detection
 cd code/BraggEmb_code/
@@ -55,7 +51,7 @@ python main.py -training_scan_file $baselinePATH -training_dark_file $baselineda
 cp $model_savedPATH$model_savedNAME $model_dstPATH$model_dstNAME${i}.pth
 ```
 
-Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):
+**Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):**
 ```shell 
 cd EventDetection_code
 
@@ -77,6 +73,7 @@ We added some example datasets for the step 1 and step 2, for step 0, please con
 
 There is a example file processing notebook at code folder that can be tried.
 
+**Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):**
 Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load): (the default #epochs is set to 100, please change it if needed, dark file input is optional)
 ```shell
 conda activate event_detection
@@ -86,7 +83,7 @@ python main.py \
       -training_dark_file /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
       -thold 100
 ```
-Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):
+**Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):**
 Step 2 (please change the -emdmdl name based on #epochs in the previous step, dark file is optional)
 ```shell
 cd EventDetection_code
