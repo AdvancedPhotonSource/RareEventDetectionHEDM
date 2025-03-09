@@ -74,6 +74,7 @@ We added some example datasets for the step 1 and step 2, for step 0, please con
 There is a example file processing notebook at code folder that can be tried.
 
 **Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):**
+* In the example below, we provide raw GE datafile from a scan with 1440 images as well as dark data for dark substraction. thold is the lower level threshold which is applied after dark subtraction (in ADUs)
 ```shell
 conda activate event_detection
 cd code/BraggEmb_code/
