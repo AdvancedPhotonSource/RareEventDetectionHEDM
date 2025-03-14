@@ -76,7 +76,7 @@ There is a example file processing notebook at code folder that can be tried.
 **Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):**
 * In the example below, we provide raw GE datafile from a scan with 1440 images as well as dark data for dark substraction. thold is the lower level threshold which is applied after dark subtraction (in ADUs).
 * As you can glean from the file name, the sample a stainless steel sample at 0 MPa.
-* The output of this setup is... ???? pth files. with 100 epochs
+* The output of this setup is a trained model checkpoint saved as code/BraggEmb_code/model_save-itrOut/script-ep00010.pth after 100 epochs. Our workflow automatically locates this checkpoint in the next step to continue processing.
 ```shell
 conda activate event_detection
 cd code/BraggEmb_code/
@@ -86,9 +86,9 @@ python main.py \
       -thold 100
 ```
 **Step 2: find the K-centers for the baseline dataset (e.g., zero load):**
-* Explain output!!!
+* The output of this setup is a trained Kmeans model (centers) saved as /code/EventDetection_code/kmeans_model.pkl. Our workflow automatically locates this centroid checkpoint in the next step to continue processing.
 ```shell
-cd EventDetection_code
+cd ../EventDetection_code # modify this path if needed
 python baseline_pre.py  -file_mode 1\
       -baseline_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_0MPa_000315.edf.ge5\
       -baseline_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000320.edf.ge5\
@@ -96,9 +96,9 @@ python baseline_pre.py  -file_mode 1\
 ```
 **Step 3: calculate REI values for subsequent datasets (i.e., scans at different load points):**
 * This step is typically repeated on subsequent scan as the load is increased.
-* Explain output!!!
+* For this step, our workflow will print the REI score in the terminal, formatted as: "the REI score for the testing data is 0.3956092421532355". Users can verify the score directly from this output. 
 ```shell
-cd EventDetection_code
+cd EventDetection_code #only do it necessary 
 python testing_scan.py  -file_mode 1\
       -testing_scan /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/park_ss_ff_260MPa_000497.edf.ge5\
       -testing_scan_dark /home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw/dark_before_000502.edf.ge5\
