@@ -39,42 +39,12 @@ We have shared the raw (ge5) testing data at the path ```/home/beams/WZHENG/Rare
 
 ## Usage
 
-This code has been mostly tested with GE detector data at 1-ID. 
+This code has been mostly tested with GE detector data at APS 1-ID. 
 
-
-**Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):**
-```shell
-conda activate event_detection
-cd code/BraggEmb_code/
-python main.py -training_scan_file $baselinePATH -training_dark_file $baselinedarkPATH -zdim $i -bkgd $bkgd
-# copy trained model if needed
-cp $model_savedPATH$model_savedNAME $model_dstPATH$model_dstNAME${i}.pth
-```
-
-**Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):**
-```shell 
-cd EventDetection_code
-
-# raw scan file-based mode (runs on raw ge5 files)
-python detection4all.py\
-      -file_mode 1\
-      -baseline_scan $baselinePATH\
-      -baseline_scan_dark $baselinedarkPATH\
-      -testing_scan $testPATH\
-      -testing_scan_dark $testdarkPATH\
-      -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
-      -thold $thold\
-      -output_scv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
-```
-
-Example:
-
-We added some example datasets for the step 1 and step 2, for step 0, please contact the authors for the example input dataset (around 12-14 GB for each raw file) 
-
-There is a example file processing notebook at code folder that can be tried.
+We added some example datasets for the step 1 and step 2.
 
 **Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):**
-* In the example below, we provide raw GE datafile from a scan with 1440 images as well as dark data for dark substraction. thold is the lower level threshold which is applied after dark subtraction (in ADUs).
+* In the example below, we provide raw GE datafile from a scan with 1440 images as well as dark data for dark substraction. **thold** is the lower level threshold which is applied after dark subtraction (in ADUs).
 * As you can glean from the file name, the sample a stainless steel sample at 0 MPa.
 * The output of this setup is a trained model checkpoint saved as code/BraggEmb_code/model_save-itrOut/script-ep00010.pth after 100 epochs. Our workflow automatically locates this checkpoint in the next step to continue processing.
 ```shell
@@ -106,6 +76,31 @@ python testing_scan.py  -file_mode 1\
       -output_csv res-04-40.csv
 ```
 
+Generic Usage:
+**Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):**
+```shell
+conda activate event_detection
+cd code/BraggEmb_code/
+python main.py -training_scan_file $baselinePATH -training_dark_file $baselinedarkPATH -zdim $i -bkgd $bkgd
+# copy trained model if needed
+cp $model_savedPATH$model_savedNAME $model_dstPATH$model_dstNAME${i}.pth
+```
+
+**Step 2: calculate REI values for subsequent datasets (i.e., scans at different loads):**
+```shell 
+cd EventDetection_code
+
+# raw scan file-based mode (runs on raw ge5 files)
+python detection4all.py\
+      -file_mode 1\
+      -baseline_scan $baselinePATH\
+      -baseline_scan_dark $baselinedarkPATH\
+      -testing_scan $testPATH\
+      -testing_scan_dark $testdarkPATH\
+      -trained_encoder $model_dstPATH$model_dstNAME${i}.pth\
+      -thold $thold\
+      -output_scv ${eva_resultPATH}d${i}/res-${thr}-${k}.csv
+```
 
 ## Citation
 If you use this code for your research, please cite our paper(s):
