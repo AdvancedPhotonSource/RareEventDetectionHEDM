@@ -77,6 +77,7 @@ python testing_scan.py  -file_mode 1\
 ```
 
 Generic Usage:
+
 **Step 1: train the BYOL encoder on a baseline dataset (e.g., zero load):**
 ```shell
 conda activate event_detection
