@@ -32,7 +32,7 @@ pip install tqdm
 pip install fabio
 ```
 
-## Testing Data:
+## Example Dataset:
 
 We have shared the raw (ge5) testing data at the path ```/home/beams/WZHENG/RareEventDetectionHEDM/example_dataset/raw```. If you have access to the APS machine, you should be able to access it.
 
