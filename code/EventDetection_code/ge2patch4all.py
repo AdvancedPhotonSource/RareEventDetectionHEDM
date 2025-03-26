@@ -36,12 +36,12 @@ if __name__ == '__main__':
 
     numDatasets = 0 
     for fileString in listFiles:
-        if fileString.startswith('hurley_quartz'):
+        if fileString.startswith('sam'):
             geFilesString.append(fileString)
-            pressure = int(fileString[14:16])
-            geFilesPressure.append(pressure)
-            idx = int(fileString[23:29])
-            geFilesIdx.append(idx)
+            #pressure = int(fileString[14:16])
+            #geFilesPressure.append(pressure)
+            #idx = int(fileString[23:29])
+            #geFilesIdx.append(idx)
             numDatasets += 1
 
     print(f"There are {numDatasets} datasets in total")
@@ -50,13 +50,13 @@ if __name__ == '__main__':
     dark = ge_raw2array(args.dark, skip_frm=0).mean(axis=0).astype(np.float32)
     print(f"Done with reading dark file from {args.dark}")
 
-    for i in range(46, numDatasets):
+    for i in range(0, numDatasets):
         inFile = args.ifd + geFilesString[i]
         print(f"The input file is {inFile}")
         outFile = args.ofd + geFilesString[i][:-3] + "h5"
         print(f"The output file is {outFile}")
         print(f"Start to generate patches for file {geFilesString[i]} ({i}/{numDatasets})...")
-        ge_raw2patch(gefname=inFile, ofn=outFile, dark=dark, bkgd=args.th, psz=15, skip_frm=0, min_intensity=0, max_r=None)
+        ge_raw2patch(gefname=inFile, ofn=outFile, dark=dark, thold=args.th, psz=15, skip_frm=0, min_intensity=0, max_r=None)
         print(f"Done generating patches for file {geFilesString[i]} ({i}/{numDatasets})...")
 
     

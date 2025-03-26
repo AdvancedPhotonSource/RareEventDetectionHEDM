@@ -39,6 +39,7 @@ if __name__ == "__main__":
     # hyper parameters tuned
     parser.add_argument('-uqthr',    type=float, default=0.4, help='threshold for confidence for UQ')
     parser.add_argument('-ncluster', type=int, default=40, help='number of clusters')
+    parser.add_argument('-trained_centers', type=str, default="kmeans_model.pkl", help='trained cluster model from the prevoius step embedding model path')
     parser.add_argument('-cluster',  type=str, default="Kmeans", help='type of clustering algorithm')
 
     # partial test dataset related arguments

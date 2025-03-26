@@ -18,7 +18,7 @@ class DetectionRun():
 
     # the following function is used to quantify the distribution and UQ for partial dataset
     # based on the number of degrees
-    def ds_anamoly_quantify(self, dsfname, frms, embmdl, clusmdl, min_score, degs=360, degs_mode=1, seed=0):
+    def ds_anamoly_quantify(self, dsfname, frms, embmdl, clusmdl, min_score, trained_centers, degs=360, degs_mode=1, seed=0):
         if degs_mode == 0 and degs < 360:
             # for the mode 0, we do sampling 20 times
             uqs = []
@@ -26,21 +26,21 @@ class DetectionRun():
                 # print(f"{i}th sampling start")
                 emb, num_patches = embmdl.peak2emb_missingwedge(dsfname, frms=frms, degree=degs, seed=seed+i, degs_mode=degs_mode)
                 #print("done with generating embddings")
-                uq, dist = clusmdl.kmeans_clustering_and_dist(emb, min_score=min_score)
+                uq, dist = clusmdl.kmeans_clustering_and_dist(emb, min_score=min_score, saved_model=trained_centers)
                 uqs.append(uq)
                 # print(f"{i}th sampling is done")
             return uqs
         elif degs_mode == 0 and degs >= 360:
             emb, num_patches = embmdl.peak2emb_missingwedge(dsfname, frms=frms, degree=degs, seed=seed)
             #print("done with generating embddings")
-            uq, dist = clusmdl.kmeans_clustering_and_dist(emb, min_score=min_score)
+            uq, dist = clusmdl.kmeans_clustering_and_dist(emb, min_score=min_score, saved_model=trained_centers)
             # #print("done with generaring distribution")
             uqs = [uq] * 20
             return uqs
         else:
             emb, num_patches = embmdl.peak2emb_missingwedge(dsfname, frms=frms, degree=degs, seed=seed)
-            #print("done with generating embddings")
-            uq, dist = clusmdl.kmeans_clustering_and_dist(emb, min_score=min_score)
+            #print("done with generating embddings")e
+            uq, dist = clusmdl.kmeans_clustering_and_dist(emb, min_score=min_score, saved_model=trained_centers)
             # #print("done with generaring distribution")
             return dsfname, np.append(dist, uq), num_patches
     
@@ -75,7 +75,7 @@ class DetectionRun():
 
         dist_and_uq = [] # used to store distribution and UQ for all datasets
         dataset_tag = [self._args.baseline_scan]
-        uq_bl, dist_bl = clusmdl.kmeans_clustering_and_dist(emb_bl, min_score=self._args.uqthr)
+        uq_bl, dist_bl = clusmdl.kmeans_clustering_and_dist(emb_bl, min_score=self._args.uqthr, saved_model=trained_centers)
         if self._args.degs_mode:
             dist_and_uq.append(np.append(dist_bl, uq_bl))
         else:
@@ -97,10 +97,10 @@ class DetectionRun():
             # the streaming mode code here
             if self._args.file_mode:
                 result = self.ds_anamoly_quantify(list_datasets[i], self._args.frms, embmdl, clusmdl, 
-                                              self._args.uqthr, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
+                                              self._args.uqthr, self._args.trained_centers, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
             else:
                 result = self.ds_anamoly_quantify(self._args.testing_scan+list_datasets[i], self._args.frms, embmdl, clusmdl, 
-                                              self._args.uqthr, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
+                                              self._args.uqthr, self._args.trained_centers, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
 
             #dataset_tag += [_res[0] for _res in result]s
             dataset_tag.append(list_datasets[i])
@@ -190,10 +190,10 @@ class DetectionRun():
             # the streaming mode code here
             if self._args.file_mode:
                 result = self.ds_anamoly_quantify(list_datasets[i], self._args.frms, embmdl, clusmdl, 
-                                              self._args.uqthr, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
+                                              self._args.uqthr, self._args.trained_centers, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
             else:
                 result = self.ds_anamoly_quantify(self._args.testing_scan+list_datasets[i], self._args.frms, embmdl, clusmdl, 
-                                              self._args.uqthr, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
+                                              self._args.uqthr, self._args.trained_centers, degs=test_degrees, degs_mode=self._args.degs_mode, seed=self._args.seed)
 
             #dataset_tag += [_res[0] for _res in result]s
             dataset_tag.append(list_datasets[i])
