@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
     numDatasets = 0 
     for fileString in listFiles:
-        if fileString.startswith('sam'):
+        if fileString.startswith('sam9_ff_load0'):
             geFilesString.append(fileString)
             #pressure = int(fileString[14:16])
             #geFilesPressure.append(pressure)
