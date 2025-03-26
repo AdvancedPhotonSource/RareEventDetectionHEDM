@@ -221,6 +221,7 @@ def find_dataset_single(idata, idark, thold, datasetPre):
     #print(filesString)
     #print(filesPressure)
     #print(filesIdx) 
+    outFile = '/home/beams/WZHENG/RareEventDetectionHEDM/code/sam9_all_init.edf.h5'
 
     return [str(outFile)], filesPressure, filesIdx
 

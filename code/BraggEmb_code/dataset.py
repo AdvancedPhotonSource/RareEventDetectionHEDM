@@ -216,6 +216,7 @@ class BraggDataset(Dataset):
                          min_intensity=0, max_r=None)
         print(f"Done with reading training file from {irawt}")
 
+        #with h5py.File('../sam9_all_init.edf.h5', 'r') as h5:
         with h5py.File(outFile, 'r') as h5:
             train_N = int(tv_split * h5['patch'].shape[0])
             if train:
